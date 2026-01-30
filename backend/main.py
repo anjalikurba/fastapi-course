@@ -6,6 +6,7 @@ from apis.base import api_router
 from apps.base import app_router
 from fastapi.staticfiles import StaticFiles
 import os
+app = FastAPI()
 
 def include_router(app):
 	app.include_router(api_router)

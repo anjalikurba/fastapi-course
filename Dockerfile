@@ -21,5 +21,6 @@ COPY backend/ ./backend/
 # Set working directory to backend so main:app can be found and imports work
 WORKDIR /app/backend
 
-# Use port 10000 which is common for Render
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
+# Use PORT environment variable provided by Render, defaulting to 10000 if not set
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
+
