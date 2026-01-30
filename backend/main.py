@@ -30,9 +30,7 @@ def start_application():
 
 app = start_application()
 
-#@app.get('/')
-
-#def hello():
- 
- #   return {'message': 'Hello World'}
+@app.get("/")
+def home():
+    return {"message": "Hello World"}
 

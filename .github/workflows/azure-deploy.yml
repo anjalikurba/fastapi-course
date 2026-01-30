@@ -1,0 +1,46 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: my-fastapi-app # Change this
+  AZURE_RESOURCE_GROUP: my-resource-group # Change this
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Create deployment package
+        run: |
+          mkdir deploy
+          cp -r backend/* deploy/
+          cd deploy
+          pip install -r requirements.txt -t ".python_packages/lib/site-packages"
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: "./deploy"
+
+      - name: Azure logout
+        run: |
+          az logout
