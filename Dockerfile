@@ -1,26 +1,13 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+COPY backend/requirements.txt .
 
-# Copy backend requirements first for better caching
-COPY backend/requirements.txt ./backend/requirements.txt
-RUN pip install --no-cache-dir -r ./backend/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy root requirements (if needed or for completeness)
-COPY requirements.txt .
+COPY backend .
 
-# Copy the backend source code
-COPY backend/ ./backend/
+EXPOSE 8000
 
-# Set working directory to backend so main:app can be found and imports work
-WORKDIR /app/backend
-
-# Use PORT environment variable provided by Render, defaulting to 10000 if not set
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
-
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

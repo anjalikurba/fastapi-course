@@ -25,7 +25,7 @@ def start_application():
 	app = FastAPI(title=settings.PROJECT_TITLE,version=settings.PROJECT_VERSION)
 	include_router(app)
 	configure_static(app)
-	create_tables()
+	# create_tables()
 	
 	return app
 
